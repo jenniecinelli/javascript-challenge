@@ -24,45 +24,27 @@ tableData.forEach((ufoSightings) => {
   });
 });
 
-// Select the button
-var button = d3.select("#button");
+var filterTable = d3.select("#filter-btn")
 
-// Select the form
-var form = d3.select("#form");
+filterTable.on("click", runFilter);
 
-// Create event handlers 
-button.on("click", runEnter);
-form.on("submit",runEnter);
+function runFilter() {
+    d3.selectAll("tr").remove()
+    d3.selectAll("td").remove()
+    
+    var inputField = d3.select("#datetime");
+    var inputValue = inputField.property("value");
+    console.log(inputValue)
+    data.forEach((ufoSightings) => {
+        if (Date.parse(ufoSightings.datetime) === Date.parse(inputValue)) {
+            var row = tbody.append("tr");
+            Object.entries(ufoSightings).forEach(([key, value]) => {
+                // add a new cell to the row
+                var cell = row.append("td");
+                // place the value into that cell
+                cell.text(value);
 
-// Complete the event handler function for the form
-function runEnter() {
-
-  // Prevent the page from refreshing
-  d3.event.preventDefault();
-  
-  // Select the input element and get the raw HTML node
-  var inputElement = d3.select("#datetime");
-
-  // Get the value property of the input element
-  var inputValue = inputElement.property("value");
-
-  tr = table.getElementsByTagName("tr");
-
-
-  console.log(inputValue);
-  console.log(tableData);
-
-  var filteredData = tableData.filter(date => date.datetime === inputValue);
-
-  console.log(filteredData);
-
-  inputValue.addEventListener("keyup", function(event) {
-    console.log(event)
-    const q = event.target.value;
-    tableData.forEach(row => {
-      console.log(row);
-      row.querySelector('td')
-    })
-  })
-
+            });
+        };
+    });
 };
